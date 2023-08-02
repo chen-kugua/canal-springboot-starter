@@ -1,8 +1,8 @@
-package com.cpiwx.dataasyncspringbootstarter.config;
+package com.cpiwx.canalstarter.config;
 
 import cn.hutool.core.util.StrUtil;
-import com.cpiwx.dataasyncspringbootstarter.anotations.CanalListener;
-import com.cpiwx.dataasyncspringbootstarter.service.CanalService;
+import com.cpiwx.canalstarter.anotations.CanalListener;
+import com.cpiwx.canalstarter.service.CanalService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;

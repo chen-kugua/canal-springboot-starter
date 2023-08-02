@@ -1,4 +1,4 @@
-package com.cpiwx.dataasyncspringbootstarter.anotations;
+package com.cpiwx.canalstarter.anotations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

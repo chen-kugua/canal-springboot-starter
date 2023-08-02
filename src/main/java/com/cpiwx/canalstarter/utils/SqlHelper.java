@@ -1,4 +1,4 @@
-package com.cpiwx.dataasyncspringbootstarter.utils;
+package com.cpiwx.canalstarter.utils;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.otter.canal.protocol.CanalEntry;

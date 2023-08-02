@@ -1,6 +1,6 @@
-package com.cpiwx.dataasyncspringbootstarter.service;
+package com.cpiwx.canalstarter.service;
 
-import com.cpiwx.dataasyncspringbootstarter.model.dto.CanalParseDTO;
+import com.cpiwx.canalstarter.model.dto.CanalParseDTO;
 
 /**
  * @author chenPan

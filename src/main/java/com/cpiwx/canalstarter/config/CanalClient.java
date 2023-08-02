@@ -1,4 +1,4 @@
-package com.cpiwx.dataasyncspringbootstarter.config;
+package com.cpiwx.canalstarter.config;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.thread.ThreadUtil;
@@ -6,9 +6,9 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.otter.canal.client.CanalConnector;
 import com.alibaba.otter.canal.protocol.CanalEntry;
 import com.alibaba.otter.canal.protocol.Message;
-import com.cpiwx.dataasyncspringbootstarter.model.dto.CanalParseDTO;
-import com.cpiwx.dataasyncspringbootstarter.service.CanalService;
-import com.cpiwx.dataasyncspringbootstarter.utils.SqlHelper;
+import com.cpiwx.canalstarter.model.dto.CanalParseDTO;
+import com.cpiwx.canalstarter.service.CanalService;
+import com.cpiwx.canalstarter.utils.SqlHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 

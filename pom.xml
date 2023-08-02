@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.cpiwx</groupId>
-    <artifactId>data-async-spring-boot-starter</artifactId>
+    <artifactId>canal-spring-boot-starter</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>data-async-spring-boot-starter</name>
-    <description>data-async-spring-boot-starter</description>
+    <name>canal-spring-boot-starter</name>
+    <description>canal-spring-boot-starter</description>
     <properties>
         <java.version>1.8</java.version>
     </properties>
@@ -52,6 +52,8 @@
     </dependencies>
 
     <build>
+        <finalName>${project.name}</finalName>
+        <!--        springboot打包插件 可执行jar-->
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -63,8 +65,27 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                    <!--打包会出现两个 jar -exec后缀的是springboot可执行包 文件在boot-inf里-->
+                    <!-- 没有后缀的是可以被其他项目引用的包-->
+                    <classifier>exec</classifier>
                 </configuration>
             </plugin>
+            <!--            其他项目引用jar-->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-compiler-plugin</artifactId>-->
+<!--                <configuration>-->
+<!--                    <source>1.8</source> &lt;!&ndash;指明源码用的Jdk版本&ndash;&gt;-->
+<!--                    <target>1.8</target> &lt;!&ndash;指明打包后的Jdk版本&ndash;&gt;-->
+<!--                    &lt;!&ndash; 如果发现依然排除不了，考虑先clean再install&ndash;&gt;-->
+<!--                    <excludes>-->
+<!--                        <exclude>-->
+<!--                            com/cpiwx/custompoi/CustomPoiApplication.java-->
+<!--                        </exclude>-->
+<!--                    </excludes>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
+
         </plugins>
     </build>
 

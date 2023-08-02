@@ -1,6 +1,6 @@
-package com.cpiwx.dataasyncspringbootstarter.anotations;
+package com.cpiwx.canalstarter.anotations;
 
-import com.cpiwx.dataasyncspringbootstarter.config.CanalAutoConfig;
+import com.cpiwx.canalstarter.config.CanalAutoConfig;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.ElementType;

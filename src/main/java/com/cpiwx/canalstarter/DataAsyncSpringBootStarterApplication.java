@@ -1,6 +1,6 @@
-package com.cpiwx.dataasyncspringbootstarter;
+package com.cpiwx.canalstarter;
 
-import com.cpiwx.dataasyncspringbootstarter.anotations.EnableCanal;
+import com.cpiwx.canalstarter.anotations.EnableCanal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package com.cpiwx.dataasyncspringbootstarter.config;
+package com.cpiwx.canalstarter.config;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;

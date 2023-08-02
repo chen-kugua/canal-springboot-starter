@@ -1,8 +1,8 @@
-package com.cpiwx.dataasyncspringbootstarter.service.impl;
+package com.cpiwx.canalstarter.service.impl;
 
-import com.cpiwx.dataasyncspringbootstarter.anotations.CanalListener;
-import com.cpiwx.dataasyncspringbootstarter.model.dto.CanalParseDTO;
-import com.cpiwx.dataasyncspringbootstarter.service.CanalService;
+import com.cpiwx.canalstarter.anotations.CanalListener;
+import com.cpiwx.canalstarter.model.dto.CanalParseDTO;
+import com.cpiwx.canalstarter.service.CanalService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.cpiwx.dataasyncspringbootstarter.config;
+package com.cpiwx.canalstarter.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurer;

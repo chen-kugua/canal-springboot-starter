@@ -1,4 +1,4 @@
-package com.cpiwx.dataasyncspringbootstarter.model.dto;
+package com.cpiwx.canalstarter.model.dto;
 
 import com.alibaba.otter.canal.protocol.CanalEntry;
 import lombok.AllArgsConstructor;
