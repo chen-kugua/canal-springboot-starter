@@ -1,11 +1,11 @@
 package com.cpiwx.dataasyncspringbootstarter.config;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.otter.canal.client.CanalConnector;
 import com.alibaba.otter.canal.protocol.CanalEntry;
 import com.alibaba.otter.canal.protocol.Message;
-import com.alibaba.otter.canal.protocol.exception.CanalClientException;
 import com.cpiwx.dataasyncspringbootstarter.model.dto.CanalParseDTO;
 import com.cpiwx.dataasyncspringbootstarter.service.CanalService;
 import com.cpiwx.dataasyncspringbootstarter.utils.SqlHelper;
@@ -25,83 +25,67 @@ public class CanalClient {
 
     private final static int BATCH_SIZE = 1000;
 
+    private static boolean IS_HEALTHY = false;
+
     public CanalClient(CanalConnector connector, CanalProperties canalProperties) {
         this.connector = connector;
         this.canalProperties = canalProperties;
     }
 
     private void reconnect() {
-        log.debug("断开连接...");
-        connector.disconnect();
         try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            log.error("sleep异常", e);
-        }
-        log.debug("开始重连...");
-        connector.connect();
-    }
-
-    @Async
-    public void checkValidate() {
-        while (true) {
-            log.debug("开始校验连接是否有效...");
-            try {
-                boolean isValidate = connector.checkValid();
-                if (!isValidate) {
-                    this.reconnect();
-                }
-            } catch (CanalClientException e) {
-                log.error("CanalClientException", e);
-                this.reconnect();
-            }
-            try {
-                Thread.sleep(canalProperties.getTestIdleTime());
-            } catch (InterruptedException e) {
-                log.error("sleep异常", e);
-            }
-        }
-
-    }
-
-    @Async
-    public void handleMessage() {
-        try {
+            log.debug("断开连接...");
+            this.close();
+            log.debug("开始重连...");
             connector.connect();
             // 订阅数据库表，来覆盖服务端初始化时的设置
             connector.subscribe(canalProperties.getSubscribe());
             // 回滚到未进行ack的地方，下次fetch的时候，可以从最后一个没有ack的地方开始拿
             connector.rollback();
-            while (true) {
-                // 获取指定数量的数据
-                Message message = connector.getWithoutAck(BATCH_SIZE);
-                // 获取批量ID
-                long batchId = message.getId();
-                // 获取批量的数量
-                int size = message.getEntries().size();
-                // 如果没有数据
-                if (batchId == -1 || size == 0) {
-                    try {
-                        // 线程休眠2秒
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        log.error("睡眠中异常", e);
-                    }
-                } else {
-                    // 如果有数据，处理数据
-                    printEntry(message.getEntries());
-                }
-                // 进行 batch id 的确认
-                connector.ack(batchId);
-            }
+            IS_HEALTHY = true;
+            log.debug("连接成功...");
         } catch (Exception e) {
-            log.error("canal异常", e);
-        } finally {
-            connector.disconnect();
+            log.error("重连失败...", e);
+            ThreadUtil.sleep(canalProperties.getTestIdleTime());
         }
+
     }
 
-    private static void printEntry(List<CanalEntry.Entry> entries) {
+    @Async
+    public void begin() {
+            while (true) {
+                if (!IS_HEALTHY) {
+                    this.reconnect();
+                    continue;
+                }
+                try {
+                    tryMessage();
+                } catch (Exception e) {
+                    log.error("从canal消费消息出错", e);
+                    IS_HEALTHY = false;
+                }
+            }
+    }
+
+    private void tryMessage() {
+        // 获取指定数量的数据
+        Message message = connector.getWithoutAck(BATCH_SIZE);
+        // 获取批量ID
+        long batchId = message.getId();
+        // 获取批量的数量
+        int size = message.getEntries().size();
+        // 如果没有数据
+        if (batchId == -1 || size == 0) {
+            ThreadUtil.sleep(1000);
+        } else {
+            // 如果有数据，处理数据
+            handleMessage(message.getEntries());
+        }
+        // 进行 batch id 的确认
+        connector.ack(batchId);
+    }
+
+    private static void handleMessage(List<CanalEntry.Entry> entries) {
         for (CanalEntry.Entry entry : entries) {
             if (entry.getEntryType() == CanalEntry.EntryType.TRANSACTIONBEGIN
                     || entry.getEntryType() == CanalEntry.EntryType.TRANSACTIONEND) {
@@ -113,7 +97,8 @@ public class CanalClient {
             try {
                 rowChange = CanalEntry.RowChange.parseFrom(entry.getStoreValue());
             } catch (Exception e) {
-                throw new RuntimeException("解析canal数据出错", e);
+               log.error("解析canal数据出错", e);
+               continue;
             }
             // 获取操作类型：insert/update/delete类型
             CanalEntry.EventType eventType = rowChange.getEventType();
@@ -170,6 +155,8 @@ public class CanalClient {
 
     public void close() {
         log.debug("close...");
-        connector.disconnect();
+        if (connector != null) {
+            connector.disconnect();
+        }
     }
 }

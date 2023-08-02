@@ -16,7 +16,6 @@ public class AutoRun implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        canalClient.checkValidate();
-        canalClient.handleMessage();
+        canalClient.begin();
     }
 }
